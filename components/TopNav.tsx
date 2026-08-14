@@ -17,29 +17,33 @@ export default function TopNav() {
 
   return (
     <header className="border-b border-border">
-      <div className="flex items-center justify-between px-6 py-3">
-  <Link href="/" className="flex items-center gap-3">
-    <Image
-      src="/logo-transparent.png"
-      alt="A.mov"
-      width={505}
-      height={144}
-      style={{ height: "110px", width: "auto", objectFit: "contain" }}
-      priority
-    />
-    <span className="font-[family-name:var(--font-neue-montreal)] font-bold text-4xl tracking-wide text-foreground">
-      CRM Arthur
-    </span>
-  </Link>
-  <Link
-    href="/leads/new"
-    className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white transition hover:bg-accent-hover"
-  >
-    <Plus size={16} />
-    Nouveau lead
-  </Link>
-</div>
-      <nav className="flex items-center gap-2 px-6 pb-4">
+      <div className="flex items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <Image
+            src="/logo.png"
+            alt="A.mov"
+            width={160}
+            height={64}
+            className="shrink-0 object-contain"
+            style={{ height: "clamp(28px, 8vw, 56px)", width: "auto" }}
+            priority
+          />
+          <span className="truncate font-[family-name:var(--font-display)] text-sm tracking-wide text-foreground sm:text-lg">
+            CRM Arthur
+          </span>
+        </Link>
+        <Link
+          href="/leads/new"
+          className="flex shrink-0 items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-bold text-white transition hover:bg-accent-hover sm:px-4"
+        >
+          <Plus size={16} />
+          <span className="hidden sm:inline">Nouveau lead</span>
+        </Link>
+      </div>
+      <nav
+        className="flex items-center gap-2 overflow-x-auto px-4 pb-4 sm:px-6"
+        style={{ scrollbarWidth: "none" }}
+      >
         {TABS.map((tab) => {
           const active = pathname === tab.href;
           const Icon = tab.icon;
@@ -47,7 +51,7 @@ export default function TopNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition ${
+              className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-bold transition ${
                 active
                   ? "bg-accent-soft text-accent"
                   : "text-muted hover:bg-surface-hover hover:text-foreground"
@@ -58,10 +62,13 @@ export default function TopNav() {
             </Link>
           );
         })}
-        <div className="ml-auto flex items-center gap-2">
-          <span className="rounded-lg border border-border p-2 text-muted transition hover:text-foreground">
+        <div className="ml-auto flex shrink-0 items-center gap-2 pl-2">
+          <Link
+            href="/settings"
+            className="rounded-lg border border-border p-2 text-muted transition hover:text-foreground"
+          >
             <Settings size={16} />
-          </span>
+          </Link>
         </div>
       </nav>
     </header>
