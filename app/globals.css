@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --background: #1a1a1a;
+  --surface: #222222;
+  --surface-hover: #292929;
+  --border: #333333;
+  --foreground: #e8e4dc;
+  --muted: #9a958c;
+  --accent: #d42b2b;
+  --accent-hover: #b82323;
+  --accent-soft: rgba(212, 43, 43, 0.14);
+
+  --status-nouveau: #8b93a1;
+  --status-contacte: #4a90d9;
+  --status-repondu: #3fb8a6;
+  --status-appel: #d4a72b;
+  --status-offre: #9b7fd4;
+  --status-gagne: #4caf7d;
+  --status-perdu: #a6524a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-status-nouveau: var(--status-nouveau);
+  --color-status-contacte: var(--status-contacte);
+  --color-status-repondu: var(--status-repondu);
+  --color-status-appel: var(--status-appel);
+  --color-status-offre: var(--status-offre);
+  --color-status-gagne: var(--status-gagne);
+  --color-status-perdu: var(--status-perdu);
+
+  --font-sans: var(--font-neue-montreal);
+  --font-display: var(--font-supply);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
