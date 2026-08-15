@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getRelances } from "@/lib/data";
+import { getRelances, autoCloseStaleLeads } from "@/lib/data";
 
 // Route appelée par la tâche programmée Cowork (une fois par jour).
 // Protégée par un token statique : ?token=... ou header Authorization: Bearer ...
@@ -12,6 +12,9 @@ export async function GET(req: NextRequest) {
   if (!token || provided !== token) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
+
+  // Clôture automatique : leads "Contacté" sans réponse depuis 14 jours → "Perdu".
+  const { closed } = await autoCloseStaleLeads(14);
 
   const { enRetard, aujourdhui } = await getRelances();
 
@@ -29,5 +32,6 @@ export async function GET(req: NextRequest) {
     total: enRetard.length + aujourdhui.length,
     en_retard: enRetard.map(format),
     aujourdhui: aujourdhui.map(format),
+    auto_clotures: closed,
   });
 }

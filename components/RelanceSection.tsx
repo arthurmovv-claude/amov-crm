@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AlertTriangle, Clock, CalendarDays } from "lucide-react";
 import type { Lead } from "@/lib/types";
 import { StatusBadge } from "@/components/Badges";
+import EmailRelanceButton from "@/components/EmailRelanceButton";
 
 const ICONS = { retard: AlertTriangle, aujourdhui: Clock, avenir: CalendarDays };
 
@@ -31,19 +32,23 @@ export default function RelanceSection({
           <p className="py-10 text-center text-sm text-muted">{emptyLabel}</p>
         ) : (
           leads.map((lead, i) => (
-            <Link
+            <div
               key={lead.id}
-              href={`/leads/${lead.id}/edit`}
-              className={`flex items-center justify-between px-4 py-3 hover:bg-surface-hover ${
+              className={`flex items-center justify-between gap-3 px-4 py-3 hover:bg-surface-hover ${
                 i !== leads.length - 1 ? "border-b border-border" : ""
               }`}
             >
-              <div>
-                <p className="text-sm font-bold">{lead.nom}</p>
-                <p className="text-xs text-muted">{lead.entreprise || lead.canal} · {lead.date_prochaine_relance}</p>
+              <Link href={`/leads/${lead.id}/edit`} className="min-w-0 flex-1">
+                <p className="truncate text-sm font-bold">{lead.nom}</p>
+                <p className="truncate text-xs text-muted">
+                  {lead.entreprise || lead.canal} · {lead.date_prochaine_relance}
+                </p>
+              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                <EmailRelanceButton lead={lead} />
+                <StatusBadge statut={lead.statut} />
               </div>
-              <StatusBadge statut={lead.statut} />
-            </Link>
+            </div>
           ))
         )}
       </div>

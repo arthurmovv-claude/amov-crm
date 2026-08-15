@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createLead, updateLead, deleteLead } from "@/lib/data";
+import { createLead, updateLead, deleteLead, createLeadsBulk } from "@/lib/data";
+import { parseImportLine } from "@/lib/importLeads";
 import type { LeadInput } from "@/lib/types";
 
 export async function createLeadAction(formData: FormData) {
@@ -65,6 +66,31 @@ export async function deleteLeadAction(id: string) {
   revalidatePath("/pipeline");
   revalidatePath("/relances");
   revalidatePath("/");
+}
+
+export async function bulkImportLeadsAction(formData: FormData) {
+  const raw = String(formData.get("data") || "");
+  const lines = raw.split("\n").map((l) => l.trim()).filter(Boolean);
+
+  const inputs: Array<Partial<LeadInput> & { nom: string; canal: string }> = [];
+  const skipped: number[] = [];
+
+  lines.forEach((line, i) => {
+    const parsed = parseImportLine(line);
+    if (parsed) inputs.push(parsed);
+    else skipped.push(i + 1);
+  });
+
+  if (inputs.length > 0) {
+    await createLeadsBulk(inputs);
+  }
+
+  revalidatePath("/leads");
+  revalidatePath("/pipeline");
+  revalidatePath("/relances");
+  revalidatePath("/");
+
+  return { imported: inputs.length, skipped };
 }
 
 function strOrNull(v: FormDataEntryValue | null): string | null {
