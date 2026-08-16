@@ -1,7 +1,11 @@
 import { CANAUX, type LeadInput } from "./types";
 
-// Une ligne = un prospect : "Nom, handle ou email, canal, niche"
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Une ligne = un prospect : "Nom, email ou lien/handle, canal, niche"
 // canal et niche sont optionnels ; canal reconnu (Instagram/LinkedIn/Email) sinon Instagram par défaut.
+// La position 2 est classée automatiquement selon sa forme (email valide vs lien/handle),
+// indépendamment de ce que dit le canal — évite qu'une URL collée là casse le champ email.
 export function parseImportLine(
   line: string
 ): (Partial<LeadInput> & { nom: string; canal: string }) | null {
@@ -10,13 +14,19 @@ export function parseImportLine(
   if (!nom) return null;
 
   const canal = CANAUX.find((c) => c.toLowerCase() === (canalRaw || "").toLowerCase()) || "Instagram";
-  const isEmail = canal === "Email";
+
+  let email: string | null = null;
+  let handle: string | null = null;
+  if (contact) {
+    if (EMAIL_PATTERN.test(contact)) email = contact;
+    else handle = contact;
+  }
 
   return {
     nom,
     entreprise: null,
-    email: isEmail && contact ? contact : null,
-    handle: !isEmail && contact ? contact : null,
+    email,
+    handle,
     canal,
     niche: niche || null,
     statut: "Nouveau",

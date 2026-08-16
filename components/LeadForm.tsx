@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { STATUTS, PRIORITES, CANAUX, type Lead } from "@/lib/types";
+import { STATUTS, PRIORITES, CANAUX, type Lead, type Statut } from "@/lib/types";
 import { createLeadAction, updateLeadAction } from "@/app/actions";
 
 function addDays(dateStr: string, days: number): string {
@@ -11,17 +11,29 @@ function addDays(dateStr: string, days: number): string {
   return base.toISOString().slice(0, 10);
 }
 
+function todayISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export default function LeadForm({ lead }: { lead?: Lead }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isEdit = Boolean(lead);
 
+  const [statut, setStatut] = useState<Statut>(lead?.statut ?? "Nouveau");
   const [dateContact, setDateContact] = useState(
     lead?.date_contact_initial ?? new Date().toISOString().slice(0, 10)
   );
   const [dateRelance, setDateRelance] = useState(
     lead?.date_prochaine_relance ?? addDays(dateContact, 3)
   );
+
+  function markContactedNow() {
+    const today = todayISO();
+    setStatut("Contacté");
+    setDateContact(today);
+    setDateRelance(addDays(today, 3));
+  }
 
   function handleSubmit(formData: FormData) {
     formData.set("date_contact_initial", dateContact);
@@ -85,11 +97,25 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className={labelClass}>Statut</label>
-          <select name="statut" defaultValue={lead?.statut ?? "Nouveau"} className={inputClass}>
+          <select
+            name="statut"
+            value={statut}
+            onChange={(e) => setStatut(e.target.value as Statut)}
+            className={inputClass}
+          >
             {STATUTS.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
+          {statut !== "Contacté" && (
+            <button
+              type="button"
+              onClick={markContactedNow}
+              className="mt-1.5 text-xs font-bold text-accent hover:underline"
+            >
+              Marquer comme contacté aujourd&apos;hui →
+            </button>
+          )}
         </div>
         <div>
           <label className={labelClass}>Priorité</label>
