@@ -3,6 +3,8 @@ import { AlertTriangle, Clock, CalendarDays } from "lucide-react";
 import type { Lead } from "@/lib/types";
 import { StatusBadge } from "@/components/Badges";
 import EmailRelanceButton from "@/components/EmailRelanceButton";
+import ProfileLinkButton from "@/components/ProfileLinkButton";
+import CopyMessageButton from "@/components/CopyMessageButton";
 
 const ICONS = { retard: AlertTriangle, aujourdhui: Clock, avenir: CalendarDays };
 
@@ -45,7 +47,9 @@ export default function RelanceSection({
                 </p>
               </Link>
               <div className="flex shrink-0 items-center gap-2">
-                <EmailRelanceButton lead={lead} />
+                <ProfileLinkButton lead={lead} />
+                <CopyMessageButton lead={lead} />
+                <EmailRelanceButton lead={lead} compact />
                 <StatusBadge statut={lead.statut} />
               </div>
             </div>
