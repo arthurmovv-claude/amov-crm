@@ -47,10 +47,11 @@ export default function RelanceSection({
                 </p>
               </Link>
               <div className="flex shrink-0 items-center gap-2">
-                <ProfileLinkButton lead={lead} />
-                <CopyMessageButton lead={lead} />
-                <EmailRelanceButton lead={lead} compact />
-                <StatusBadge statut={lead.statut} />
+              <ProfileLinkButton lead={lead} />
+              <CopyMessageButton lead={lead} />
+              <EmailRelanceButton lead={lead} compact />
+              <MarkRelancedButton lead={lead} />
+              <StatusBadge statut={lead.statut} />
               </div>
             </div>
           ))
@@ -59,3 +60,4 @@ export default function RelanceSection({
     </div>
   );
 }
+import MarkRelancedButton from "@/components/MarkRelancedButton";

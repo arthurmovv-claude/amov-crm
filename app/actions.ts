@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createLead, updateLead, deleteLead, createLeadsBulk } from "@/lib/data";
+import { createLead, updateLead, deleteLead, createLeadsBulk, getLead } from "@/lib/data";
 import { parseImportLine } from "@/lib/importLeads";
 import type { LeadInput } from "@/lib/types";
 
@@ -91,6 +91,39 @@ export async function bulkImportLeadsAction(formData: FormData) {
   revalidatePath("/");
 
   return { imported: inputs.length, skipped };
+}
+
+export async function markRelancedAction(id: string) {
+  const lead = await getLead(id);
+  if (!lead) return;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayISO = today.toISOString().slice(0, 10);
+
+  let nextRelance: string | null = null;
+  if (lead.date_contact_initial) {
+    const contact = new Date(lead.date_contact_initial + "T00:00:00");
+    const daysSinceContact = Math.round((today.getTime() - contact.getTime()) / 86400000);
+    if (daysSinceContact < 6) {
+      // C'était la relance J+3 → on programme la relance J+7.
+      const j7 = new Date(contact);
+      j7.setDate(j7.getDate() + 7);
+      nextRelance = j7.toISOString().slice(0, 10);
+    }
+    // Sinon : c'était la relance J+7 (ou plus tard) → pas de nouvelle relance programmée,
+    // l'auto-clôture à J+14 prendra le relais si toujours sans réponse.
+  }
+
+  await updateLead(id, {
+    date_derniere_action: todayISO,
+    date_prochaine_relance: nextRelance,
+  });
+
+  revalidatePath("/leads");
+  revalidatePath("/pipeline");
+  revalidatePath("/relances");
+  revalidatePath("/");
 }
 
 function strOrNull(v: FormDataEntryValue | null): string | null {
