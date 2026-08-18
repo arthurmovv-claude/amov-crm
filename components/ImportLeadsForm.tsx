@@ -4,9 +4,11 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { bulkImportLeadsAction } from "@/app/actions";
 
+type ImportResult = { imported: number; skipped: number[]; duplicates: string[] };
+
 export default function ImportLeadsForm() {
   const [value, setValue] = useState("");
-  const [result, setResult] = useState<{ imported: number; skipped: number[] } | null>(null);
+  const [result, setResult] = useState<ImportResult | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -25,7 +27,8 @@ export default function ImportLeadsForm() {
       <p className="mb-3 text-sm text-muted">
         Une ligne par prospect, format :{" "}
         <code className="rounded bg-surface px-1.5 py-0.5 text-xs">Nom, handle ou email, canal, niche</code>. Le
-        canal (Instagram / LinkedIn / Email) et la niche sont optionnels — Instagram par défaut.
+        canal (Instagram / LinkedIn / Email) et la niche sont optionnels — Instagram par défaut. Les doublons
+        (même handle ou email déjà en base) sont détectés et ignorés automatiquement.
       </p>
       <textarea
         value={value}
@@ -47,6 +50,12 @@ export default function ImportLeadsForm() {
           <p className="font-bold text-foreground">
             {result.imported} lead{result.imported > 1 ? "s" : ""} importé{result.imported > 1 ? "s" : ""}.
           </p>
+          {result.duplicates.length > 0 && (
+            <p className="mt-1 text-muted">
+              Doublon{result.duplicates.length > 1 ? "s" : ""} ignoré{result.duplicates.length > 1 ? "s" : ""}{" "}
+              (déjà en base) : {result.duplicates.join(", ")}
+            </p>
+          )}
           {result.skipped.length > 0 && (
             <p className="mt-1 text-muted">
               Ligne{result.skipped.length > 1 ? "s" : ""} ignorée{result.skipped.length > 1 ? "s" : ""} (nom

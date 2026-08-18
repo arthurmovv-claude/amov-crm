@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { UserPlus, Sparkles } from "lucide-react";
+import { UserPlus, Sparkles, Clock } from "lucide-react";
 import { getLeads, getRelances } from "@/lib/data";
 import { STATUTS } from "@/lib/types";
 
@@ -47,6 +47,11 @@ export default async function DashboardPage() {
     { label: "Gagnés", value: gagnes },
   ];
 
+  const seuilBacklog = new Date();
+seuilBacklog.setDate(seuilBacklog.getDate() - 7);
+const seuilISO = seuilBacklog.toISOString().slice(0, 10);
+const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice(0, 10) <= seuilISO);
+
   return (
     <div>
       <h1 className="mb-1 text-2xl font-bold">Dashboard</h1>
@@ -60,6 +65,31 @@ export default async function DashboardPage() {
           </div>
         ))}
       </div>
+
+      {backlog.length > 0 && (
+  <div className="mb-8 rounded-lg border border-border bg-surface p-4">
+    <div className="mb-3 flex items-center gap-2">
+      <Clock size={16} className="text-accent" />
+      <h2 className="text-sm font-bold text-accent">
+        En attente de premier contact depuis plus de 7 jours ({backlog.length})
+      </h2>
+    </div>
+    <div className="space-y-1">
+      {backlog.map((l) => (
+        <Link
+          key={l.id}
+          href={`/leads/${l.id}/edit`}
+          className="flex items-center justify-between rounded-lg px-2 py-1.5 text-sm hover:bg-surface-hover"
+        >
+          <span className="font-bold">{l.nom}</span>
+          <span className="text-xs text-muted">
+            {l.entreprise || l.canal} · sourcé le {l.created_at.slice(0, 10)}
+          </span>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <h2 className="mb-3 text-sm font-bold text-muted">Répartition par statut</h2>
