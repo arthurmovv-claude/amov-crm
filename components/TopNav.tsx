@@ -20,17 +20,20 @@ export default function TopNav() {
       <div className="flex items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
         <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
           <Image
-            src="/logo.png"
+            src="/logo-transparent.png"
             alt="A.mov"
             width={160}
             height={64}
             className="shrink-0 object-contain"
-            style={{ height: "clamp(28px, 8vw, 56px)", width: "auto" }}
+            style={{ height: "clamp(36px, 10vw, 72px)", width: "auto" }}
             priority
           />
-          <span className="truncate font-[family-name:var(--font-display)] text-sm tracking-wide text-foreground sm:text-lg">
-            CRM Arthur
-          </span>
+          <span
+  className="truncate font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-foreground sm:text-2xl"
+  style={{ textShadow: "0 0 12px rgba(212, 43, 43, 0.55)" }}
+>
+  CRM Arthur.mov
+</span>
         </Link>
         <Link
           href="/leads/new"
