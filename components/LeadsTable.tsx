@@ -93,7 +93,12 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                   <td className="px-4 py-3 font-bold">{l.nom}</td>
                   <td className="px-4 py-3 text-muted">{l.entreprise || "—"}</td>
                   <td className="px-4 py-3 text-muted">{l.canal}</td>
-                  <td className="px-4 py-3"><StatusBadge statut={l.statut} /></td>
+                  <td className="px-4 py-3">
+  <div className="flex items-center gap-2">
+    <StatusBadge statut={l.statut} />
+    <NextStatusButton lead={l} />
+  </div>
+</td>
                   <td className="px-4 py-3"><PriorityBadge priorite={l.priorite} /></td>
                   <td className="px-4 py-3 text-muted">{l.date_prochaine_relance || "—"}</td>
                   <td className="px-4 py-3">
@@ -127,3 +132,5 @@ className="rounded-lg border border-border p-1.5 text-muted transition hover:bor
     </div>
   );
 }
+
+import NextStatusButton from "@/components/NextStatusButton";

@@ -54,7 +54,7 @@ const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Dashboard</h1>
+      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Dashboard</h1>
       <p className="mb-6 text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">

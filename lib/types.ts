@@ -54,3 +54,19 @@ export interface Lead {
 }
 
 export type LeadInput = Omit<Lead, "id" | "created_at" | "updated_at">;
+
+// Progression naturelle du pipeline (hors "Perdu", qui est une sortie manuelle, pas une étape).
+export const PROGRESSION: Statut[] = [
+  "Nouveau",
+  "Contacté",
+  "Répondu",
+  "Appel planifié",
+  "Offre envoyée",
+  "Gagné",
+];
+
+export function nextStatut(current: Statut): Statut | null {
+  const idx = PROGRESSION.indexOf(current);
+  if (idx === -1 || idx === PROGRESSION.length - 1) return null;
+  return PROGRESSION[idx + 1];
+}

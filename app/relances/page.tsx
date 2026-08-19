@@ -9,7 +9,7 @@ export default async function RelancesPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Relances</h1>
+      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Relances</h1>
       <p className="mb-6 text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
 
       <RelanceSection title="En retard" leads={enRetard} tone="retard" emptyLabel="Aucune relance en retard" />

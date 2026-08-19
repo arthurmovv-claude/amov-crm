@@ -11,7 +11,7 @@ export default async function EditLeadPage({ params }: { params: Promise<{ id: s
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Modifier le lead</h1>
+      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Modifier le lead</h1>
       <p className="mb-6 text-sm text-muted">{lead.nom}</p>
       <LeadForm lead={lead} />
     </div>
