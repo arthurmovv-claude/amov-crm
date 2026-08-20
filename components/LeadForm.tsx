@@ -28,6 +28,14 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
     lead?.date_prochaine_relance ?? addDays(dateContact, 3)
   );
 
+  const appelExistant = lead?.date_appel ? new Date(lead.date_appel) : null;
+  const [dateAppel, setDateAppel] = useState(
+    appelExistant ? appelExistant.toISOString().slice(0, 10) : ""
+  );
+  const [heureAppel, setHeureAppel] = useState(
+    appelExistant ? appelExistant.toISOString().slice(11, 16) : ""
+  );
+
   function markContactedNow() {
     const today = todayISO();
     setStatut("Contacté");
@@ -38,6 +46,9 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
   function handleSubmit(formData: FormData) {
     formData.set("date_contact_initial", dateContact);
     formData.set("date_prochaine_relance", dateRelance);
+    if (dateAppel) {
+      formData.set("date_appel", new Date(`${dateAppel}T${heureAppel || "00:00"}`).toISOString());
+    }
     startTransition(async () => {
       if (isEdit && lead) {
         await updateLeadAction(lead.id, formData);
@@ -126,6 +137,29 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
           </select>
         </div>
       </div>
+
+      {statut === "Appel planifié" && (
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>Date de l&apos;appel</label>
+            <input
+              type="date"
+              value={dateAppel}
+              onChange={(e) => setDateAppel(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Heure de l&apos;appel</label>
+            <input
+              type="time"
+              value={heureAppel}
+              onChange={(e) => setHeureAppel(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+        </div>
+      )}
 
       <div>
         <label className={labelClass}>Détail de personnalisation utilisé</label>

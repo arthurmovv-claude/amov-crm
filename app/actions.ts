@@ -20,6 +20,7 @@ export async function createLeadAction(formData: FormData) {
     date_contact_initial: strOrNull(formData.get("date_contact_initial")),
     date_derniere_action: strOrNull(formData.get("date_derniere_action")),
     date_prochaine_relance: strOrNull(formData.get("date_prochaine_relance")),
+    date_appel: strOrNull(formData.get("date_appel")),
   };
   if (!input.nom) throw new Error("Le nom est requis.");
   await createLead(input as Partial<LeadInput> & { nom: string; canal: string });
@@ -41,9 +42,9 @@ export async function updateLeadAction(id: string, formData: FormData) {
     priorite: String(formData.get("priorite") || "Moyenne"),
     detail_personnalisation: strOrNull(formData.get("detail_personnalisation")),
     notes: strOrNull(formData.get("notes")),
-    date_contact_initial: strOrNull(formData.get("date_contact_initial")),
     date_derniere_action: strOrNull(formData.get("date_derniere_action")),
     date_prochaine_relance: strOrNull(formData.get("date_prochaine_relance")),
+    date_appel: strOrNull(formData.get("date_appel")),
   };
   await updateLead(id, patch as Partial<LeadInput>);
   revalidatePath("/leads");
