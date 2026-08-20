@@ -116,7 +116,17 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                     </div>
                   </td>
                   <td className="px-4 py-3"><PriorityBadge priorite={l.priorite} /></td>
-                  <td className="px-4 py-3 text-muted">{l.date_prochaine_relance || "—"}</td>
+                  <td className="px-4 py-3 text-muted">
+  {l.statut === "Appel planifié" && l.date_appel
+    ? new Date(l.date_appel).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }) + " (appel)"
+    : l.date_prochaine_relance || "—"}
+</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
                       <ProfileLinkButton lead={l} />

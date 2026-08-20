@@ -52,6 +52,14 @@ export async function updateLeadAction(id: string, formData: FormData) {
   revalidatePath("/");
 }
 
+export async function scheduleAppelAction(id: string, dateAppelISO: string) {
+  await updateLead(id, { statut: "Appel planifié", date_appel: dateAppelISO } as Partial<LeadInput>);
+  revalidatePath("/pipeline");
+  revalidatePath("/leads");
+  revalidatePath("/relances");
+  revalidatePath("/");
+}
+
 export async function updateLeadStatusAction(id: string, statut: string) {
   await updateLead(id, { statut } as Partial<LeadInput>);
   revalidatePath("/pipeline");

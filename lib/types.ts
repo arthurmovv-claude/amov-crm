@@ -49,6 +49,7 @@ export interface Lead {
   date_contact_initial: string | null; // ISO date
   date_derniere_action: string | null; // ISO date
   date_prochaine_relance: string | null; // ISO date
+  date_appel: string | null; // ISO datetime (date + heure de l'appel planifié)
   created_at: string;
   updated_at: string;
 }
