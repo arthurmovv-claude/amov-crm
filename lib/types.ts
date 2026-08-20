@@ -50,6 +50,7 @@ export interface Lead {
   date_derniere_action: string | null; // ISO date
   date_prochaine_relance: string | null; // ISO date
   date_appel: string | null; // ISO datetime (date + heure de l'appel planifié)
+  valeur_estimee: number | null; // en euros
   created_at: string;
   updated_at: string;
 }

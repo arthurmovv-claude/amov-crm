@@ -138,6 +138,19 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
         </div>
       </div>
 
+      <div>
+  <label className={labelClass}>Valeur estimée (€)</label>
+  <input
+    name="valeur_estimee"
+    type="number"
+    min="0"
+    step="1"
+    defaultValue={lead?.valeur_estimee ?? ""}
+    placeholder="ex: 500"
+    className={inputClass}
+  />
+</div>
+
       {statut === "Appel planifié" && (
         <div className="grid grid-cols-2 gap-4">
           <div>

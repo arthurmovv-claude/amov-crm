@@ -39,13 +39,25 @@ export default async function DashboardPage() {
       )
     : 0;
 
-  const stats = [
-    { label: "Leads actifs", value: enCours },
-    { label: "Relances en retard", value: enRetard.length, danger: enRetard.length > 0 },
-    { label: "Relances aujourd'hui", value: aujourdhui.length },
-    { label: "Taux de réponse", value: `${tauxReponse}%` },
-    { label: "Gagnés", value: gagnes },
-  ];
+    const formatEUR = (n: number) =>
+      n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+    
+    const pipeEstime = leads
+      .filter((l) => !["Gagné", "Perdu"].includes(l.statut))
+      .reduce((sum, l) => sum + (l.valeur_estimee || 0), 0);
+    
+    const valeurGagnee = leads
+      .filter((l) => l.statut === "Gagné")
+      .reduce((sum, l) => sum + (l.valeur_estimee || 0), 0);
+    
+    const stats = [
+      { label: "Leads actifs", value: enCours },
+      { label: "Relances en retard", value: enRetard.length, danger: enRetard.length > 0 },
+      { label: "Relances aujourd'hui", value: aujourdhui.length },
+      { label: "Taux de réponse", value: `${tauxReponse}%` },
+      { label: "Gagnés", value: gagnes, sub: formatEUR(valeurGagnee) },
+      { label: "Pipe estimé", value: formatEUR(pipeEstime) },
+    ];
 
   const seuilBacklog = new Date();
 seuilBacklog.setDate(seuilBacklog.getDate() - 7);
@@ -57,14 +69,15 @@ const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice
       <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Dashboard</h1>
       <p className="mb-6 text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
 
-      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
-        {stats.map((s) => (
-          <div key={s.label} className="rounded-lg border border-border bg-surface p-4">
-            <p className="text-xs text-muted">{s.label}</p>
-            <p className={`mt-1 text-2xl font-bold ${s.danger ? "text-accent" : ""}`}>{s.value}</p>
-          </div>
-        ))}
-      </div>
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+  {stats.map((s) => (
+    <div key={s.label} className="rounded-lg border border-border bg-surface p-4">
+      <p className="text-xs text-muted">{s.label}</p>
+      <p className={`mt-1 text-2xl font-bold ${s.danger ? "text-accent" : ""}`}>{s.value}</p>
+      {s.sub && <p className="mt-0.5 text-xs text-muted">{s.sub}</p>}
+    </div>
+  ))}
+</div>
 
       {backlog.length > 0 && (
   <div className="mb-8 rounded-lg border border-border bg-surface p-4">

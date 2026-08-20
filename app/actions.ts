@@ -21,6 +21,7 @@ export async function createLeadAction(formData: FormData) {
     date_derniere_action: strOrNull(formData.get("date_derniere_action")),
     date_prochaine_relance: strOrNull(formData.get("date_prochaine_relance")),
     date_appel: strOrNull(formData.get("date_appel")),
+    valeur_estimee: numOrNull(formData.get("valeur_estimee")),
   };
   if (!input.nom) throw new Error("Le nom est requis.");
   await createLead(input as Partial<LeadInput> & { nom: string; canal: string });
@@ -45,6 +46,7 @@ export async function updateLeadAction(id: string, formData: FormData) {
     date_derniere_action: strOrNull(formData.get("date_derniere_action")),
     date_prochaine_relance: strOrNull(formData.get("date_prochaine_relance")),
     date_appel: strOrNull(formData.get("date_appel")),
+    valeur_estimee: numOrNull(formData.get("valeur_estimee")),
   };
   await updateLead(id, patch as Partial<LeadInput>);
   revalidatePath("/leads");
@@ -136,6 +138,13 @@ export async function markRelancedAction(id: string) {
   revalidatePath("/pipeline");
   revalidatePath("/relances");
   revalidatePath("/");
+}
+
+function numOrNull(v: FormDataEntryValue | null): number | null {
+  const s = v ? String(v).trim() : "";
+  if (!s) return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
 }
 
 function strOrNull(v: FormDataEntryValue | null): string | null {
