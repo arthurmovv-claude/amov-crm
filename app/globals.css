@@ -20,6 +20,26 @@
   --status-perdu: #a6524a;
 }
 
+.theme-light {
+  --background: #f5f4f0;
+  --surface: #ffffff;
+  --surface-hover: #ebe9e3;
+  --border: #e2dfd7;
+  --foreground: #1a1a1a;
+  --muted: #7a776e;
+  --accent: #d42b2b;
+  --accent-hover: #b82323;
+  --accent-soft: rgba(212, 43, 43, 0.08);
+
+  --status-nouveau: #6b7280;
+  --status-contacte: #2f6fb8;
+  --status-repondu: #1f9c88;
+  --status-appel: #b8860f;
+  --status-offre: #7c5cc4;
+  --status-gagne: #2f9c63;
+  --status-perdu: #a6524a;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
