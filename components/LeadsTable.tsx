@@ -9,6 +9,17 @@ import { deleteLeadAction } from "@/app/actions";
 import EmailRelanceButton from "@/components/EmailRelanceButton";
 import ProfileLinkButton from "@/components/ProfileLinkButton";
 import CopyMessageButton from "@/components/CopyMessageButton";
+import NextStatusButton from "@/components/NextStatusButton";
+
+const STATUT_PLURIEL: Record<Statut, string> = {
+  "Nouveau": "Nouveaux",
+  "Contacté": "Contactés",
+  "Répondu": "Répondus",
+  "Appel planifié": "Appels planifiés",
+  "Offre envoyée": "Offres envoyées",
+  "Gagné": "Gagnés",
+  "Perdu": "Perdus",
+};
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const [query, setQuery] = useState("");
@@ -99,21 +110,21 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                   <td className="px-4 py-3 text-muted">{l.entreprise || "—"}</td>
                   <td className="px-4 py-3 text-muted">{l.canal}</td>
                   <td className="px-4 py-3">
-  <div className="flex items-center gap-2">
-    <StatusBadge statut={l.statut} />
-    <NextStatusButton lead={l} />
-  </div>
-</td>
+                    <div className="flex items-center gap-2">
+                      <StatusBadge statut={l.statut} />
+                      <NextStatusButton lead={l} />
+                    </div>
+                  </td>
                   <td className="px-4 py-3"><PriorityBadge priorite={l.priorite} /></td>
                   <td className="px-4 py-3 text-muted">{l.date_prochaine_relance || "—"}</td>
                   <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-2">
-  <ProfileLinkButton lead={l} />
-  <CopyMessageButton lead={l} />
-  <EmailRelanceButton lead={l} compact />
-  <Link href={`/leads/${l.id}/edit`} title="Modifier" className="rounded-lg border border-border p-1.5 text-muted transition hover:border-accent hover:text-accent">
-    <Pencil size={14} />
-  </Link>
+                    <div className="flex items-center justify-end gap-2">
+                      <ProfileLinkButton lead={l} />
+                      <CopyMessageButton lead={l} />
+                      <EmailRelanceButton lead={l} compact />
+                      <Link href={`/leads/${l.id}/edit`} title="Modifier" className="rounded-lg border border-border p-1.5 text-muted transition hover:border-accent hover:text-accent">
+                        <Pencil size={14} />
+                      </Link>
                       <button
                         disabled={isPending}
                         onClick={() => {
@@ -122,9 +133,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                           }
                         }}
                         title="Supprimer"
-className="rounded-lg border border-border p-1.5 text-muted transition hover:border-accent hover:text-accent"
->
-  <Trash2 size={14} />
+                        className="rounded-lg border border-border p-1.5 text-muted transition hover:border-accent hover:text-accent"
+                      >
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
@@ -137,15 +148,3 @@ className="rounded-lg border border-border p-1.5 text-muted transition hover:bor
     </div>
   );
 }
-
-import NextStatusButton from "@/components/NextStatusButton";
-
-const STATUT_PLURIEL: Record<Statut, string> = {
-  "Nouveau": "Nouveaux",
-  "Contacté": "Contactés",
-  "Répondu": "Répondus",
-  "Appel planifié": "Appels planifiés",
-  "Offre envoyée": "Offres envoyées",
-  "Gagné": "Gagnés",
-  "Perdu": "Perdus",
-};
