@@ -63,10 +63,13 @@ export async function autoCloseStaleLeads(days = 14): Promise<{ closed: number; 
 export async function getRelances() {
   const leads = await getLeads();
   const today = todayISO();
+  // Exclut "Nouveau" : un lead jamais contacté n'a rien à "relancer", même s'il a
+  // une date_prochaine_relance posée (ex: valeur par défaut du formulaire de création).
+  const exclus = ["Nouveau", "Gagné", "Perdu"];
   const enRetard = leads.filter(
-    (l) => l.date_prochaine_relance && l.date_prochaine_relance < today && !["Gagné", "Perdu"].includes(l.statut)
+    (l) => l.date_prochaine_relance && l.date_prochaine_relance < today && !exclus.includes(l.statut)
   );
-  const aujourdhui = leads.filter((l) => l.date_prochaine_relance === today && !["Gagné", "Perdu"].includes(l.statut));
+  const aujourdhui = leads.filter((l) => l.date_prochaine_relance === today && !exclus.includes(l.statut));
   const in7 = new Date();
   in7.setDate(in7.getDate() + 7);
   const in7ISO = in7.toISOString().slice(0, 10);
@@ -75,7 +78,7 @@ export async function getRelances() {
       l.date_prochaine_relance &&
       l.date_prochaine_relance > today &&
       l.date_prochaine_relance <= in7ISO &&
-      !["Gagné", "Perdu"].includes(l.statut)
+      !exclus.includes(l.statut)
   );
   return { enRetard, aujourdhui, aVenir };
 }
