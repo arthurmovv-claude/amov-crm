@@ -39,6 +39,11 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
   return (
     <div>
+      {statutFilter && (
+        <p className="mb-4 text-sm font-bold text-accent">
+          {filtered.length} {STATUT_PLURIEL[statutFilter]}
+        </p>
+      )}
       <div className="mb-4 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
         <Search size={16} className="text-muted" />
         <input
@@ -134,3 +139,13 @@ className="rounded-lg border border-border p-1.5 text-muted transition hover:bor
 }
 
 import NextStatusButton from "@/components/NextStatusButton";
+
+const STATUT_PLURIEL: Record<Statut, string> = {
+  "Nouveau": "Nouveaux",
+  "Contacté": "Contactés",
+  "Répondu": "Répondus",
+  "Appel planifié": "Appels planifiés",
+  "Offre envoyée": "Offres envoyées",
+  "Gagné": "Gagnés",
+  "Perdu": "Perdus",
+};
