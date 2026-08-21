@@ -9,8 +9,10 @@ export default async function RelancesPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Relances</h1>
-      <p className="mb-6 text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
+  <div className="sticky top-0 z-30 -mx-6 mb-6 border-b border-border bg-background px-6 pb-4 pt-2">
+    <h1 className="mb-1 text-3xl font-bold text-accent">Relances</h1>
+    <p className="text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
+  </div>
 
       <RelanceSection title="En retard" leads={enRetard} tone="retard" emptyLabel="Aucune relance en retard" />
       <RelanceSection title="Aujourd'hui" leads={aujourdhui} tone="aujourdhui" emptyLabel="Aucune relance prévue aujourd'hui" />

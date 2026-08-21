@@ -63,13 +63,14 @@ export async function autoCloseStaleLeads(days = 14): Promise<{ closed: number; 
 export async function getRelances() {
   const leads = await getLeads();
   const today = todayISO();
-  // Exclut "Nouveau" : un lead jamais contacté n'a rien à "relancer", même s'il a
-  // une date_prochaine_relance posée (ex: valeur par défaut du formulaire de création).
-  const exclus = ["Nouveau", "Gagné", "Perdu"];
+    // Seuls les leads "Contacté" ont une relance de silence à traiter : "Nouveau" n'a
+  // jamais été contacté, et "Répondu"/"Appel planifié"/"Offre envoyée"/"Gagné"/"Perdu"
+  // sont déjà dans une conversation active ou clôturée, pas en attente de réponse.
+  const relançable = (l: Lead) => l.statut === "Contacté";
   const enRetard = leads.filter(
-    (l) => l.date_prochaine_relance && l.date_prochaine_relance < today && !exclus.includes(l.statut)
+    (l) => l.date_prochaine_relance && l.date_prochaine_relance < today && relançable(l)
   );
-  const aujourdhui = leads.filter((l) => l.date_prochaine_relance === today && !exclus.includes(l.statut));
+  const aujourdhui = leads.filter((l) => l.date_prochaine_relance === today && relançable(l));
   const in7 = new Date();
   in7.setDate(in7.getDate() + 7);
   const in7ISO = in7.toISOString().slice(0, 10);
@@ -78,7 +79,7 @@ export async function getRelances() {
       l.date_prochaine_relance &&
       l.date_prochaine_relance > today &&
       l.date_prochaine_relance <= in7ISO &&
-      !exclus.includes(l.statut)
+      relançable(l)
   );
   return { enRetard, aujourdhui, aVenir };
 }

@@ -64,10 +64,12 @@ seuilBacklog.setDate(seuilBacklog.getDate() - 7);
 const seuilISO = seuilBacklog.toISOString().slice(0, 10);
 const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice(0, 10) <= seuilISO);
 
-  return (
-    <div>
-      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Dashboard</h1>
-      <p className="mb-6 text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
+return (
+  <div>
+    <div className="sticky top-0 z-30 -mx-6 mb-6 border-b border-border bg-background px-6 pb-4 pt-2">
+      <h1 className="mb-1 text-3xl font-bold text-accent">Dashboard</h1>
+      <p className="text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
+    </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
   {stats.map((s) => (
