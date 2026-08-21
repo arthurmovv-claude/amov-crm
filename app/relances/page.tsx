@@ -10,7 +10,7 @@ export default async function RelancesPage() {
   return (
     <div>
   <div className="sticky top-0 z-30 -mx-6 mb-6 border-b border-border bg-background px-6 pb-4 pt-2">
-    <h1 className="mb-1 text-3xl font-bold text-accent">Relances</h1>
+    <h1 className="mb-1 text-5xl font-bold text-accent">Relances</h1>
     <p className="text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
   </div>
 
