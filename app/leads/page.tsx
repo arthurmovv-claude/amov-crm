@@ -10,7 +10,7 @@ export default async function LeadsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between gap-2">
+      <div className="sticky top-0 z-30 mb-6 flex items-center justify-between gap-2 border-b border-border bg-background pb-4 pt-2">
         <div>
           <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Leads</h1>
           <p className="text-sm text-muted">{leads.length} lead{leads.length > 1 ? "s" : ""}</p>
