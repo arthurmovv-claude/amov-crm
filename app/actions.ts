@@ -5,8 +5,8 @@ import { createLead, updateLead, deleteLead, createLeadsBulk, getLead, getLeads 
 import { parseImportLine, dedupeImports } from "@/lib/importLeads";
 import type { LeadInput } from "@/lib/types";
 
-export async function createLeadAction(formData: FormData) {
-  const input: Record<string, unknown> = {
+export async function updateLeadAction(id: string, formData: FormData) {
+  const patch: Record<string, unknown> = {
     nom: String(formData.get("nom") || "").trim(),
     entreprise: strOrNull(formData.get("entreprise")),
     email: strOrNull(formData.get("email")),
@@ -23,8 +23,7 @@ export async function createLeadAction(formData: FormData) {
     date_appel: strOrNull(formData.get("date_appel")),
     valeur_estimee: numOrNull(formData.get("valeur_estimee")),
   };
-  if (!input.nom) throw new Error("Le nom est requis.");
-  await createLead(input as Partial<LeadInput> & { nom: string; canal: string });
+  await updateLead(id, patch as Partial<LeadInput>);
   revalidatePath("/leads");
   revalidatePath("/pipeline");
   revalidatePath("/relances");
@@ -64,7 +63,18 @@ export async function scheduleAppelAction(id: string, dateAppelISO: string) {
 }
 
 export async function updateLeadStatusAction(id: string, statut: string) {
-  await updateLead(id, { statut } as Partial<LeadInput>);
+  const patch: Record<string, unknown> = { statut };
+
+  if (statut === "Contacté") {
+    const lead = await getLead(id);
+    if (lead && !lead.date_contact_initial) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      patch.date_contact_initial = today.toISOString().slice(0, 10);
+    }
+  }
+
+  await updateLead(id, patch as Partial<LeadInput>);
   revalidatePath("/pipeline");
   revalidatePath("/leads");
   revalidatePath("/relances");
