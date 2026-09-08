@@ -5,8 +5,8 @@ import { createLead, updateLead, deleteLead, createLeadsBulk, getLead, getLeads 
 import { parseImportLine, dedupeImports } from "@/lib/importLeads";
 import type { LeadInput } from "@/lib/types";
 
-export async function updateLeadAction(id: string, formData: FormData) {
-  const patch: Record<string, unknown> = {
+export async function createLeadAction(formData: FormData) {
+  const input: Record<string, unknown> = {
     nom: String(formData.get("nom") || "").trim(),
     entreprise: strOrNull(formData.get("entreprise")),
     email: strOrNull(formData.get("email")),
@@ -23,7 +23,8 @@ export async function updateLeadAction(id: string, formData: FormData) {
     date_appel: strOrNull(formData.get("date_appel")),
     valeur_estimee: numOrNull(formData.get("valeur_estimee")),
   };
-  await updateLead(id, patch as Partial<LeadInput>);
+  if (!input.nom) throw new Error("Le nom est requis.");
+  await createLead(input as Partial<LeadInput> & { nom: string; canal: string });
   revalidatePath("/leads");
   revalidatePath("/pipeline");
   revalidatePath("/relances");
@@ -42,6 +43,7 @@ export async function updateLeadAction(id: string, formData: FormData) {
     priorite: String(formData.get("priorite") || "Moyenne"),
     detail_personnalisation: strOrNull(formData.get("detail_personnalisation")),
     notes: strOrNull(formData.get("notes")),
+    date_contact_initial: strOrNull(formData.get("date_contact_initial")),
     date_derniere_action: strOrNull(formData.get("date_derniere_action")),
     date_prochaine_relance: strOrNull(formData.get("date_prochaine_relance")),
     date_appel: strOrNull(formData.get("date_appel")),
@@ -130,13 +132,10 @@ export async function markRelancedAction(id: string) {
     const contact = new Date(lead.date_contact_initial + "T00:00:00");
     const daysSinceContact = Math.round((today.getTime() - contact.getTime()) / 86400000);
     if (daysSinceContact < 6) {
-      // C'était la relance J+3 → on programme la relance J+7.
       const j7 = new Date(contact);
       j7.setDate(j7.getDate() + 7);
       nextRelance = j7.toISOString().slice(0, 10);
     }
-    // Sinon : c'était la relance J+7 (ou plus tard) → pas de nouvelle relance programmée,
-    // l'auto-clôture à J+14 prendra le relais si toujours sans réponse.
   }
 
   await updateLead(id, {
