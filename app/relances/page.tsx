@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getRelances } from "@/lib/data";
 import RelanceSection from "@/components/RelanceSection";
+import DailyVerse from "@/components/DailyVerse";
 
 export default async function RelancesPage() {
   const { enRetard, aujourdhui, aVenir } = await getRelances();
@@ -9,9 +10,12 @@ export default async function RelancesPage() {
 
   return (
     <div>
-  <div className="sticky top-0 z-30 mb-6 border-b border-border bg-background pb-4 pt-2">
-    <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Relances</h1>
-    <p className="text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
+  <div className="sticky top-0 z-30 mb-6 flex items-center gap-6 border-b border-border bg-background pb-4 pt-2">
+    <div>
+      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Relances</h1>
+      <p className="text-sm text-muted">{total} relance{total > 1 ? "s" : ""} à traiter</p>
+    </div>
+    <DailyVerse />
   </div>
 
       <RelanceSection title="En retard" leads={enRetard} tone="retard" emptyLabel="Aucune relance en retard" />
