@@ -4,10 +4,12 @@ import Link from "next/link";
 import { UserPlus, Sparkles, Clock } from "lucide-react";
 import { getLeads, getRelances } from "@/lib/data";
 import { STATUTS } from "@/lib/types";
+import { getDailyVerse } from "@/lib/verses";
 
 export default async function DashboardPage() {
   const leads = await getLeads();
   const { enRetard, aujourdhui } = await getRelances();
+  const verset = getDailyVerse();
 
   if (leads.length === 0) {
     return (
@@ -66,9 +68,28 @@ const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice
 
 return (
   <div>
-    <div className="sticky top-0 z-30 mb-6 border-b border-border bg-background pb-4 pt-2">
-      <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Dashboard</h1>
-      <p className="text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
+    <div className="sticky top-0 z-30 mb-6 flex items-center gap-6 border-b border-border bg-background pb-4 pt-2">
+      <div>
+        <h1 className="mb-1 text-5xl font-bold text-accent tracking-tighter">Dashboard</h1>
+        <p className="text-sm text-muted">Vue d&apos;ensemble de ton activité commerciale</p>
+      </div>
+      <div className="flex-1 px-4 text-center">
+        <p
+          className="text-sm font-light italic"
+          style={{
+            color: "#f5e6a3",
+            textShadow: "0 0 8px rgba(245, 230, 163, 0.7), 0 0 18px rgba(245, 230, 163, 0.35)",
+          }}
+        >
+          « {verset.texte} »
+        </p>
+        <p
+          className="mt-1 text-xs font-light not-italic opacity-70"
+          style={{ color: "#f5e6a3" }}
+        >
+          — {verset.reference}
+        </p>
+      </div>
     </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
