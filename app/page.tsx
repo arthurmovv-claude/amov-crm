@@ -84,7 +84,7 @@ return (
           « {verset.texte} »
         </p>
         <p
-          className="mt-1 text-xs font-light not-italic opacity-70"
+          className="mt-1 text-sm font-light not-italic opacity-70"
           style={{ color: "#f5e6a3" }}
         >
           — {verset.reference}
