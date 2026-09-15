@@ -65,6 +65,19 @@ seuilBacklog.setDate(seuilBacklog.getDate() - 7);
 const seuilISO = seuilBacklog.toISOString().slice(0, 10);
 const backlog = leads.filter((l) => l.statut === "Nouveau" && l.created_at.slice(0, 10) <= seuilISO);
 
+const jours7 = Array.from({ length: 7 }, (_, i) => {
+  const d = new Date();
+  d.setDate(d.getDate() - (6 - i));
+  return d;
+});
+const contactsParJour = jours7.map((d) => {
+  const iso = d.toISOString().slice(0, 10);
+  const count = leads.filter((l) => l.date_contact_initial === iso).length;
+  const label = d.toLocaleDateString("fr-FR", { weekday: "short", day: "2-digit", month: "2-digit" });
+  return { iso, label, count };
+});
+const maxContacts = Math.max(1, ...contactsParJour.map((c) => c.count));
+
 return (
   <div>
     <div className="sticky top-0 z-30 mb-6 flex items-center gap-6 border-b border-border bg-background pb-4 pt-2">
@@ -110,22 +123,42 @@ return (
   </div>
 )}
 
-      <div className="rounded-lg border border-border bg-surface p-4">
-        <h2 className="mb-3 text-sm font-bold text-muted">Répartition par statut</h2>
-        <div className="space-y-2">
-          {STATUTS.map((s) => {
-            const count = leads.filter((l) => l.statut === s).length;
-            const pct = leads.length ? (count / leads.length) * 100 : 0;
-            return (
-              <div key={s} className="flex items-center gap-3">
-                <span className="w-32 shrink-0 text-xs text-muted">{s}</span>
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-background">
-                  <div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-lg border border-border bg-surface p-4">
+          <h2 className="mb-3 text-sm font-bold text-muted">Répartition par statut</h2>
+          <div className="space-y-2">
+            {STATUTS.map((s) => {
+              const count = leads.filter((l) => l.statut === s).length;
+              const pct = leads.length ? (count / leads.length) * 100 : 0;
+              return (
+                <div key={s} className="flex items-center gap-3">
+                  <span className="w-32 shrink-0 text-xs text-muted">{s}</span>
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-background">
+                    <div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className="w-6 shrink-0 text-right text-xs text-muted">{count}</span>
                 </div>
-                <span className="w-6 shrink-0 text-right text-xs text-muted">{count}</span>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-border bg-surface p-4">
+          <h2 className="mb-3 text-sm font-bold text-muted">Contactés (7 derniers jours)</h2>
+          <div className="space-y-2">
+            {contactsParJour.map((c) => (
+              <div key={c.iso} className="flex items-center gap-3">
+                <span className="w-20 shrink-0 text-xs capitalize text-muted">{c.label}</span>
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-background">
+                  <div
+                    className="h-full rounded-full bg-accent"
+                    style={{ width: `${(c.count / maxContacts) * 100}%` }}
+                  />
+                </div>
+                <span className="w-6 shrink-0 text-right text-xs text-muted">{c.count}</span>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </div>
