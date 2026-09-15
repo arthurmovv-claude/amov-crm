@@ -44,8 +44,13 @@ export default function LeadForm({ lead }: { lead?: Lead }) {
   }
 
   function handleSubmit(formData: FormData) {
-    formData.set("date_contact_initial", dateContact);
-    formData.set("date_prochaine_relance", dateRelance);
+    // Le lead n'est réellement "contacté" que si son statut le dit.
+    // Tant qu'il est "Nouveau", on ne stocke pas de date de contact/relance,
+    // même si les champs affichent une valeur par défaut à l'écran.
+    if (statut !== "Nouveau") {
+      formData.set("date_contact_initial", dateContact);
+      formData.set("date_prochaine_relance", dateRelance);
+    }
     if (dateAppel) {
       formData.set("date_appel", new Date(`${dateAppel}T${heureAppel || "00:00"}`).toISOString());
     }
