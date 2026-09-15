@@ -70,13 +70,13 @@ const jours7 = Array.from({ length: 7 }, (_, i) => {
   d.setDate(d.getDate() - (6 - i));
   return d;
 });
+const OBJECTIF_JOURNALIER = 15;
 const contactsParJour = jours7.map((d) => {
   const iso = d.toISOString().slice(0, 10);
   const count = leads.filter((l) => l.date_contact_initial === iso).length;
   const label = d.toLocaleDateString("fr-FR", { weekday: "short", day: "2-digit", month: "2-digit" });
   return { iso, label, count };
 });
-const maxContacts = Math.max(1, ...contactsParJour.map((c) => c.count));
 
 return (
   <div>
@@ -150,9 +150,9 @@ return (
               <div key={c.iso} className="flex items-center gap-3">
                 <span className="w-20 shrink-0 text-xs capitalize text-muted">{c.label}</span>
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-background">
-                  <div
+                <div
                     className="h-full rounded-full bg-accent"
-                    style={{ width: `${(c.count / maxContacts) * 100}%` }}
+                    style={{ width: `${Math.min(100, (c.count / OBJECTIF_JOURNALIER) * 100)}%` }}
                   />
                 </div>
                 <span className="w-6 shrink-0 text-right text-xs text-muted">{c.count}</span>
